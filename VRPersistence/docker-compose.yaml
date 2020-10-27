@@ -1,0 +1,21 @@
+﻿version: '3'
+
+services:
+  api:
+    build: .
+    ports:
+    - ${VRPersistenceApiPort}:5000
+    environment:
+      VRPersistenceDbHost: "${VRPersistenceDbHost}"
+      VRPersistenceDbPort: "${VRPersistenceDbPort}"
+      VRPersistenceDbName: "${VRPersistenceDbName}"
+      VRPersistenceDbUsername: "${VRPersistenceDbUsername}"
+      VRPersistenceDbPassword: "${VRPersistenceDbPassword}"
+  db:
+    image: library/postgres:13.0
+    ports:
+      - ${VRPersistenceDbPort}:5432
+    environment:
+      POSTGRES_DB: "${VRPersistenceDbName}"
+      POSTGRES_USER: "${VRPersistenceDbUsername}"
+      POSTGRES_PASSWORD: "${VRPersistenceDbPassword}"
