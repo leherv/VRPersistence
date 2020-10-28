@@ -7,15 +7,19 @@ There will be another microservice responsible for scraping different websites a
 
 ## How to setup
 Be sure to check out the .env file. The sensible parts of the service are configured via the environment. Normally the .env file would not be part of
-the repository (I know), but as everything runs locally Docker and is not accessible from outside, there is no problem with it.
+the repository (I know), but as everything runs locally Docker and is not accessible from outside, there is no problem with it. If you want to change the setup you could for example remove postgres from the docker-compose.yaml and run your own database locally.
+You would just have to update the variables in the .env file accordingly.
 1. docker-compose up 
     * builds the images, spins up the containers, reads the .env file and starts the containers
+
+For debugging without attaching to the container I also added launchSettings.json under /Properties. These would also normally not be included in the repository for security reasons but due to the already mentioned circumstances it it is ok.
+You can run the ASP.NET Core API as the environment variables are simply pasted into the file (only *VRPersistenceDbHost* needs to be exchanged to localhost if you still want to use the postgres container).
 
 ## How to use
 VR-Persistence exposes its API on localhost:${VRPersistenceApiPort}. At the moment it is possible to call:
 * AddRelease
 
-Under /resources there is a Postman-Collection with example requests which can be used to test the service.
+Under /resources there is a Postman-Collection with example requests which can be used to test the service. Just dont forget to update the port in accordance with ${VRPersistenceApiPort}.
 
 ## 12 Factor App
 See: https://12factor.net/
