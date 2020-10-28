@@ -11,6 +11,10 @@ services:
       VRPersistenceDbName: "${VRPersistenceDbName}"
       VRPersistenceDbUsername: "${VRPersistenceDbUsername}"
       VRPersistenceDbPassword: "${VRPersistenceDbPassword}"
+    
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: library/postgres:13.0
     ports:
@@ -19,3 +23,9 @@ services:
       POSTGRES_DB: "${VRPersistenceDbName}"
       POSTGRES_USER: "${VRPersistenceDbUsername}"
       POSTGRES_PASSWORD: "${VRPersistenceDbPassword}"
+      
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${VRPersistenceDbUsername}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
