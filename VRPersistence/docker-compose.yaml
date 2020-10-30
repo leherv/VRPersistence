@@ -1,4 +1,4 @@
-﻿version: '3'
+﻿version: '3.7'
 
 services:
   api:
@@ -11,10 +11,10 @@ services:
       VRPersistenceDbName: "${VRPersistenceDbName}"
       VRPersistenceDbUsername: "${VRPersistenceDbUsername}"
       VRPersistenceDbPassword: "${VRPersistenceDbPassword}"
-    
     depends_on:
       db:
         condition: service_healthy
+        
   db:
     image: library/postgres:13.0
     ports:

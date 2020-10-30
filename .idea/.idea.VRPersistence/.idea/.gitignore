@@ -1,0 +1,13 @@
+﻿# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/contentModel.xml
+/projectSettingsUpdater.xml
+/.idea.VRPersistence.iml
+/modules.xml
+# Datasource local storage ignored files
+/../../../../../../../:\Repos\private\VRPersistence\.idea\.idea.VRPersistence\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/

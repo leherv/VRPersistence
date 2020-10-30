@@ -49,7 +49,16 @@
 					}
 				},
 				"url": {
-					"raw": ""
+					"raw": "http://localhost:5000/api/release",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"release"
+					]
 				},
 				"description": "this will not work as onepiece is not in the list"
 			},
