@@ -46,7 +46,7 @@ namespace VRPersistence.Controllers
                     }
                     else
                     {
-                        results.Add(Result.Failure("this one is invalid"));
+                        results.Add(Result.Failure(validationResult.GetMessage()));
                     }
                 }
                 return new JsonResult(results.Select(r => r.AsSerializableResult()));
