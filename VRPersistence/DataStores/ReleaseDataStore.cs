@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +18,16 @@ namespace VRPersistence.DataStores
         {
             _dbContext = dbContext;
             _logger = logger;
+        }
+
+        public async Task<Result<List<Release>>> GetNotNotified(string mediaName)
+        {
+            var releases = _dbContext.Releases
+                .Include(r => r.Media)
+                .Where(r => r.Media.MediaName.Equals(mediaName) &&
+                       !r.Notified)
+                .ToList();
+            return Result.Success(releases);
         }
         
         public async Task<Result<Release>> GetRelease(string mediaName, int releaseNumber)

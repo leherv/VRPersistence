@@ -12,7 +12,94 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"MediaName\": \"sololeveling\",\r\n    \"ReleaseNumber\": 0,\r\n    \"URL\": \"https://w3.sololeveling.net/manga/solo-leveling-chapter-0/\"\r\n}",
+					"raw": "{\r\n    \"Releases\": [\r\n        {\r\n            \"MediaName\": \"sololeveling\",\r\n            \"ReleaseNumber\": 0,\r\n            \"URL\": \"https://w3.sololeveling.net/manga/solo-leveling-chapter-0/\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/release",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"release"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddReleaseMultiple",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Releases\": [\r\n        {\r\n            \"MediaName\": \"sololeveling\",\r\n            \"ReleaseNumber\": 1,\r\n            \"URL\": \"https://w3.sololeveling.net/manga/solo-leveling-chapter-1/\"\r\n        },\r\n        {\r\n            \"MediaName\": \"sololeveling\",\r\n            \"ReleaseNumber\": 2,\r\n            \"URL\": \"https://w3.sololeveling.net/manga/solo-leveling-chapter-2/\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/release",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"release"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddReleaseMultipleFailure",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Releases\": [\r\n        {\r\n            \"MediaName\": \"onepiece\",\r\n            \"ReleaseNumber\": 0,\r\n            \"URL\": \"https://w3.sololeveling.net/manga/solo-leveling-chapter-1/\"\r\n        },\r\n        {\r\n            \"MediaName\": \"onepiece\",\r\n            \"ReleaseNumber\": 1,\r\n            \"URL\": \"https://w3.sololeveling.net/manga/solo-leveling-chapter-2/\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/release",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"release"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddReleaseMultipleFailureSucessMixed",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Releases\": [\r\n        {\r\n            \"MediaName\": \"onepiece\",\r\n            \"ReleaseNumber\": 0,\r\n            \"URL\": \"https://w3.sololeveling.net/manga/solo-leveling-chapter-1/\"\r\n        },\r\n        {\r\n            \"MediaName\": \"sololeveling\",\r\n            \"ReleaseNumber\": 3,\r\n            \"URL\": \"https://w3.sololeveling.net/manga/solo-leveling-chapter-3/\"\r\n        }\r\n    ]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -41,7 +128,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"MediaName\": \"onepiece\",\r\n    \"ReleaseNumber\": 0,\r\n    \"URL\": \"someUrl\"\r\n}",
+					"raw": "{\r\n    \"Releases\": [\r\n        {\r\n            \"MediaName\": \"onepiece\",\r\n            \"ReleaseNumber\": 0,\r\n            \"URL\": \"someUrl\"\r\n        }\r\n    ]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -61,6 +148,88 @@
 					]
 				},
 				"description": "this will not work as onepiece is not in the list"
+			},
+			"response": []
+		},
+		{
+			"name": "SetNotified",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"SetNotifiedMessages\": [\r\n        {\r\n            \"ReleaseId\": 1\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/release",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"release"
+					]
+				},
+				"description": "sets the notified state of a release to true"
+			},
+			"response": []
+		},
+		{
+			"name": "SetNotifiedMultiple",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"SetNotifiedMessages\": [\r\n        {\r\n            \"ReleaseId\": 2\r\n        },\r\n        {\r\n            \"ReleaseId\": 3\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/release",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"release"
+					]
+				},
+				"description": "sets the notified state of a release to true"
+			},
+			"response": []
+		},
+		{
+			"name": "GetNotNotifiedReleases",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/release/sololeveling",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"release",
+						"sololeveling"
+					]
+				},
+				"description": "gets all not yet notified releases for a media with mediaName"
 			},
 			"response": []
 		}

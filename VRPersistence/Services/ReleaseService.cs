@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
@@ -16,6 +17,14 @@ namespace VRPersistence.Services
         {
             _releaseDataStore = releaseDataStore;
             _logger = logger;
+        }
+
+        public async Task<Result<IEnumerable<Release>>> GetNotNotified(string mediaName)
+        {
+            var result = await _releaseDataStore.GetNotNotified(mediaName);
+            return result.IsSuccess 
+                ? Result.Success(result.Value.Select(releaseDao => new Release(releaseDao)))
+                : Result.Failure<IEnumerable<Release>>($"Failed to load non notified releases for media ${mediaName}");
         }
         
         public async Task<Result> AddRelease(Release release)

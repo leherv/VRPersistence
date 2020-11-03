@@ -74,10 +74,19 @@ namespace VRPersistence.Controllers
             }
         }
 
-        // [HttpGet("{mediaName}")]
-        // public async Task<JsonResult> GetNotNotified() 
-        // {
-        //     return new JsonResult();
-        // }
+        [HttpGet("{mediaName}")]
+        public async Task<JsonResult> GetNotNotified(string mediaName)
+        {
+            try
+            {
+                var result = await _releaseService.GetNotNotified(mediaName);
+                return new JsonResult(result.AsSerializableResult());
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Something went wrong. {exceptionMessage}", e.Message);
+                return new JsonResult(Result.Failure("Getting releases not yet notified went wrong.").AsSerializableResult());
+            }
+        }
     }
 }
