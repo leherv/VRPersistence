@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using VRPersistence.DAO;
+using VRPersistence.BO;
 using VRPersistence.DataStores;
 
 namespace VRPersistence.Services
@@ -17,23 +18,51 @@ namespace VRPersistence.Services
             _logger = logger;
         }
         
-        public async Task<Result> AddRelease(BO.Release release)
+        public async Task<Result> AddRelease(Release release)
         {
-            var isNewNewestResult = await _releaseDataStore.IsNewNewest(release);
+            var isNewNewestResult = await _releaseDataStore.IsNewNewest(release.Media.MediaName, release.ReleaseNumber);
             if (isNewNewestResult.IsSuccess)
             {
-                _logger.LogInformation("Release with {releaseNumber} is the newest for {mediaName} so it will be added" , release.ReleaseNumber.ToString(), release.Media.MediaName);
-                return await _releaseDataStore.AddRelease(release);
+                _logger.LogInformation("Release with releaseNumber {releaseNumber} is the newest for {mediaName} so it will be added" , release.ReleaseNumber.ToString(), release.Media.MediaName);
+                var releaseDao = new DAO.Release(release);
+                return await _releaseDataStore.AddRelease(releaseDao);
             }
             _logger.LogInformation("Release with releaseNumber {releaseNumber} is not newer for {mediaName} so it will be discarded", release.ReleaseNumber.ToString(), release.Media.MediaName);
-            return Result.Success();
+            return Result.Failure($"Release with releaseNumber {release.ReleaseNumber.ToString()} is not newer for {release.Media.MediaName}");
         }
 
-        public async Task<Result<BO.Release>> GetRelease(string mediaName, int releaseNumber)
+        public async Task<List<Result>> AddReleases(IEnumerable<Release> releases)
         {
-            var result = await _releaseDataStore.GetRelease(mediaName, releaseNumber);
-            return result;
+            var results = new List<Result>();
+            foreach (var release in releases)
+            {
+                results.Add(await AddRelease(release));
+            }
+            return results;
         }
-        
+
+        public async Task<List<Result>> SetNotified(IEnumerable<SetNotified> setNotified)
+        {
+            var results = new List<Result>();
+            foreach (var s in setNotified)
+            {
+                var result = await _releaseDataStore.GetRelease(s.ReleaseId);
+                if (result.IsSuccess)
+                {
+                    var releaseDao = result.Value;
+                    _logger.LogInformation("Found release to set notified for id {id}", s.ReleaseId.ToString());
+                    if (releaseDao.Notified)
+                    {
+                        _logger.LogInformation("Release was already notified, nothing to do.");
+                    }
+                    results.Add(await _releaseDataStore.SetNotified(releaseDao));
+                }
+                else
+                {
+                    results.Add(Result.Failure($"Could not find release with id {s.ReleaseId.ToString()}"));
+                }
+            }
+            return results;
+        }
     }
 }

@@ -1,21 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Npgsql;
 using VRPersistence.Config;
 using VRPersistence.DataStores;
-using VRPersistence.DTO;
 using VRPersistence.Services;
 
 namespace VRPersistence
@@ -35,10 +26,7 @@ namespace VRPersistence
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services
-                .AddControllers()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<DtoAssemblyMarker>());
-
+            services.AddControllers();
             var connectionString = GetConnectionString(Configuration, hostEnvironment);
             services.AddDbContext<VRPersistenceDbContext>(options =>
                 options.UseNpgsql(connectionString));

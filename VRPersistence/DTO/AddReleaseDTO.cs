@@ -13,11 +13,12 @@ namespace VRPersistence.DTO
 
     public class ReleaseValidator : AbstractValidator<AddReleaseDTO>
     {
-        public ReleaseValidator(IOptions<TrackedMediaSettings> trackedMediaSettings)
+        public ReleaseValidator(TrackedMediaSettings trackedMediaSettings)
         {
-            var settings = trackedMediaSettings.Value;
             RuleFor(r => r.MediaName).NotEmpty();
-            RuleFor(r => r.MediaName).Must(m => settings.MediaNames.Contains(m.ToLower()));
+            RuleFor(r => r.MediaName)
+                .Must(m => trackedMediaSettings.MediaNames.Contains(m.ToLower()))
+                .WithMessage("Media of release to add is not included in the MediaSettings");
             RuleFor(r => r.Url).NotEmpty();
             RuleFor(r => r.ReleaseNumber).Must(n => n > -1);
         }
