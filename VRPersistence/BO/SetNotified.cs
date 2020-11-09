@@ -1,4 +1,4 @@
-﻿using VRPersistence.DTO;
+﻿using VRPersistence.DTO.request;
 
 namespace VRPersistence.BO
 {

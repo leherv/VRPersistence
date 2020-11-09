@@ -27,9 +27,8 @@ namespace VRPersistence
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            var connectionString = GetConnectionString(Configuration, hostEnvironment);
             services.AddDbContext<VRPersistenceDbContext>(options =>
-                options.UseNpgsql(connectionString));
+                options.UseNpgsql(Configuration.GetConnectionString("Db")));
 
             services.AddScoped<IReleaseService, ReleaseService>();
             services.AddScoped<IReleaseDataStore, ReleaseDataStore>();
@@ -53,20 +52,6 @@ namespace VRPersistence
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-        }
-
-        private static string GetConnectionString(IConfiguration configuration, IHostEnvironment hostEnvironment)
-        {
-            return $"Host={EnvVar("VRPersistenceDbHost")};" +
-                   $"Port={EnvVar("VRPersistenceDbPort")};" +
-                   $"Database={EnvVar("VRPersistenceDbName")};" +
-                   $"Username={EnvVar("VRPersistenceDbUsername")};" +
-                   $"Password={EnvVar("VRPersistenceDbPassword")}";
-        }
-
-        private static string EnvVar(string envVar)
-        {
-            return Environment.GetEnvironmentVariable(envVar);
         }
     }
 }

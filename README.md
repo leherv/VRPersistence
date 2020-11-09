@@ -8,7 +8,7 @@ There will be another microservice responsible for scraping different websites a
 ## How to setup
 You need at least Docker Engine Release 18.06.0 (due to docker-compose file format v3.7) and docker-compose installed.
 Be sure to check out the .env file. The sensible parts of the service are configured via the environment. Normally the .env file would not be part of
-the repository (I know), but as everything runs locally Docker and is not accessible from outside, there is no problem with it. If you want to change the setup you could for example remove postgres from the docker-compose.yaml and run your own database locally.
+the repository (I know), but as everything runs locally in Docker and is not accessible from outside, there is no problem with it. If you want to change the setup you could for example remove postgres from the docker-compose.yaml and run your own database locally.
 You would just have to update the variables in the .env file accordingly.
 
 1. Execute *docker-compose up* 
@@ -18,10 +18,17 @@ For debugging without attaching to the container I also added launchSettings.jso
 You can run the ASP.NET Core API as the environment variables are simply pasted into the file (only *VRPersistenceDbHost* needs to be exchanged to localhost if you still want to use the postgres container).
 
 ## How to use
-VR-Persistence exposes its API on localhost:${VRPersistenceApiPort}. At the moment it is possible to call:
-* AddRelease
-
+VR-Persistence exposes its API on localhost:${VRPersistenceApiPort}.
 Under /resources there is a Postman-Collection with example requests which can be used to test the service. Just dont forget to update the port in accordance with ${VRPersistenceApiPort}.
+
+# Database Data
+${VRPersistence_DbVolumeName} in the .env file determines the name of the volume that is created and contains postgresql's data as we want to persist the database.
+I decided against a directory on the host system (outside the container) and mounting it in the container as directory permissions and security mechanismns need to be set up correctly.
+The problem of a host directory not being accessible on all potential hosts is partially true (only partially because the directory could also be configured via .env)
+Also if you use WSL2 you would have to have you codebase in WSL to make it work so the default is using a volume.
+
+You could reconfigure the app to use a bind-mount put an additonal variable in the environment and configure the app to bind postgresql's data. After that you would have to put your code in WSL2 or just run it on a Linux-Host.
+You can use docker-compose-optionB.yaml as a starting point, I also added the environment variable it uses in .env, you just need to uncomment it. Per default it is configured to use the pg_data folder.
 
 ## 12 Factor App
 See: https://12factor.net/

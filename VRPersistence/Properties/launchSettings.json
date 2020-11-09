@@ -5,12 +5,8 @@
       "commandName": "Project",
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
-        "VRPersistenceDbHost": "localhost",
-        "VRPersistenceDbPort": "5432",
-        "VRPersistenceDbName": "vrpersistence",
-        "VRPersistenceDbUsername": "postgres",
-        "VRPersistenceDbPassword": "admin",
-        "VRPersistenceApiPort": "5000"
+        "VRPersistence_ConnectionStrings__Db": "Host=localhost;Port=5432;Database=vrpersistence;Username=postgres;Password=admin",
+        "VRPersistence_ApiPort": "5000"
       }
     }
   }

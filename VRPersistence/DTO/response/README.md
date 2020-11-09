@@ -1,0 +1,1 @@
+﻿at the moment every response is simply a Result (success or failure) so we do not need any additional ResponseDTOs

@@ -1,8 +1,7 @@
 ﻿using FluentValidation;
-using Microsoft.Extensions.Options;
 using VRPersistence.Config;
 
-namespace VRPersistence.DTO
+namespace VRPersistence.DTO.request
 {
     public class AddReleaseDTO
     {

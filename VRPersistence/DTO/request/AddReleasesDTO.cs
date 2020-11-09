@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VRPersistence.DTO
+namespace VRPersistence.DTO.request
 {
     public class AddReleasesDTO
     {
