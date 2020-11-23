@@ -32,6 +32,11 @@ namespace VRPersistence
 
             services.AddScoped<IReleaseService, ReleaseService>();
             services.AddScoped<IReleaseDataStore, ReleaseDataStore>();
+            services.AddScoped<INotificationEndpointService, NotificationEndpointService>();
+            services.AddScoped<INotificationDataStore, NotificationDataStore>();
+            services.AddScoped<IMediaDataStore, MediaDataStore>();
+            services.AddScoped<ISubscriptionService, SubscriptionService>();
+            services.AddScoped<ISubscriptionDataStore, SubscriptionDataStore>();
             
             services.Configure<TrackedMediaSettings>(Configuration.GetSection("TrackedMediaSettings"));
         }

@@ -24,7 +24,7 @@ namespace VRPersistence.DataStores
         {
             var releases = _dbContext.Releases
                 .Include(r => r.Media)
-                .Where(r => r.Media.MediaName.Equals(mediaName) &&
+                .Where(r => r.Media.MediaName.ToLower().Equals(mediaName.ToLower()) &&
                        !r.Notified)
                 .ToList();
             return Result.Success(releases);

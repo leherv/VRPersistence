@@ -11,12 +11,14 @@ namespace VRPersistence.Services
     public class ReleaseService: IReleaseService
     {
         private readonly IReleaseDataStore _releaseDataStore;
+        private readonly IMediaDataStore _mediaDataStore;
         private readonly ILogger<ReleaseService> _logger;
 
-        public ReleaseService(IReleaseDataStore releaseDataStore, ILogger<ReleaseService> logger)
+        public ReleaseService(IReleaseDataStore releaseDataStore, ILogger<ReleaseService> logger, IMediaDataStore mediaDataStore)
         {
             _releaseDataStore = releaseDataStore;
             _logger = logger;
+            _mediaDataStore = mediaDataStore;
         }
 
         public async Task<Result<IEnumerable<Release>>> GetNotNotified(string mediaName)
@@ -32,8 +34,13 @@ namespace VRPersistence.Services
             var isNewNewestResult = await _releaseDataStore.IsNewNewest(release.Media.MediaName, release.ReleaseNumber);
             if (isNewNewestResult.IsSuccess)
             {
-                _logger.LogInformation("Release with releaseNumber {releaseNumber} is the newest for {mediaName} so it will be added" , release.ReleaseNumber.ToString(), release.Media.MediaName);
                 var releaseDao = new DAO.Release(release);
+                var mediaResult = _mediaDataStore.GetMedia(release.Media.MediaName);
+                if (mediaResult.IsSuccess)
+                {
+                    releaseDao.Media = mediaResult.Value;
+                }
+                _logger.LogInformation("Release with releaseNumber {releaseNumber} is the newest for {mediaName} so it will be added" , release.ReleaseNumber.ToString(), release.Media.MediaName);
                 return await _releaseDataStore.AddRelease(releaseDao);
             }
             _logger.LogInformation("Release with releaseNumber {releaseNumber} is not newer for {mediaName} so it will be discarded", release.ReleaseNumber.ToString(), release.Media.MediaName);
