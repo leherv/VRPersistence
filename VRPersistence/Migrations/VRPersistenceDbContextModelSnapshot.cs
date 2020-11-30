@@ -74,6 +74,9 @@ namespace VRPersistence.Migrations
                     b.Property<int>("ReleaseNumber")
                         .HasColumnType("integer");
 
+                    b.Property<int>("SubReleaseNumber")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Url")
                         .HasColumnType("text");
 

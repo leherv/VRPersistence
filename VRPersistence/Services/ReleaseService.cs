@@ -31,8 +31,7 @@ namespace VRPersistence.Services
         
         public async Task<Result> AddRelease(Release release)
         {
-            var isNewNewestResult = await _releaseDataStore.IsNewNewest(release.Media.MediaName, release.ReleaseNumber);
-            if (isNewNewestResult.IsSuccess)
+            if (IsNewNewest(release))
             {
                 var releaseDao = new DAO.Release(release);
                 var mediaResult = _mediaDataStore.GetMedia(release.Media.MediaName);
@@ -45,6 +44,19 @@ namespace VRPersistence.Services
             }
             _logger.LogInformation("Release with releaseNumber {releaseNumber} is not newer for {mediaName} so it will be discarded", release.ReleaseNumber.ToString(), release.Media.MediaName);
             return Result.Failure($"Release with releaseNumber {release.ReleaseNumber.ToString()} is not newer for {release.Media.MediaName}");
+        }
+
+        private bool IsNewNewest(Release release)
+        {
+            var currentNewestResult = _releaseDataStore.GetNewestReleaseForMedia(release.Media.MediaName);
+            if (currentNewestResult.IsSuccess)
+            {
+                // no release yet for this media
+                if (currentNewestResult.Value == null) return true;
+                return release.IsNewerThan(currentNewestResult.Value);
+            }
+
+            return false;
         }
 
         public async Task<List<Result>> AddReleases(IEnumerable<Release> releases)

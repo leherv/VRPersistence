@@ -12,7 +12,7 @@ namespace VRPersistence.DataStores
         public Task<Result<Release>> GetRelease(long id);
         public Task<Result> AddRelease(Release release);
 
-        public Task<Result> IsNewNewest(string mediaName, int releaseNumber);
+        public Result<Release> GetNewestReleaseForMedia(string mediaName);
         public Task<Result> SetNotified(Release release);
     }
 }

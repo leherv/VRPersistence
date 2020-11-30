@@ -60,14 +60,25 @@ namespace VRPersistence.DataStores
                 return Result.Failure("Adding the release to the database failed.");
             }
         }
-
-        public async Task<Result> IsNewNewest(string mediaName, int releaseNumber)
+        
+        public Result<Release> GetNewestReleaseForMedia(string mediaName)
         {
-            var newerRelease = await _dbContext.Releases
-                .FirstOrDefaultAsync(r => r.Media.MediaName == mediaName && r.ReleaseNumber >= releaseNumber);
-            return newerRelease == null
-                ? Result.Success()
-                : Result.Failure("The Release is not newer than the already added releases");
+            try
+            {
+                var newestRelease = _dbContext.Releases
+                    .Where(r => r.Media.MediaName.ToLower().Equals(mediaName.ToLower()))
+                    .OrderBy(r => r.ReleaseNumber)
+                    .Take(1)
+                    .ToList();
+                return newestRelease.Count == 1
+                    ? Result.Success(newestRelease[0])
+                    : Result.Success<Release>(null);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("Getting newest release for media {media} failed due to: {exceptionMessage}", mediaName, e.Message);
+                return Result.Failure<Release>($"Getting newest release for media {mediaName} failed.");
+            }
         }
 
         public async Task<Result> SetNotified(Release release)
