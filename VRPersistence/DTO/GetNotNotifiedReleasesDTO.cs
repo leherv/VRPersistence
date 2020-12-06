@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using VRPersistence.Config;
 
-namespace VRPersistence.DTO.request
+namespace VRPersistence.DTO
 {
     public class GetNotNotifiedReleasesDTO
     {

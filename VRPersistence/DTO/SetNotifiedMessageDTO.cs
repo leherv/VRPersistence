@@ -1,4 +1,4 @@
-﻿namespace VRPersistence.DTO.request
+﻿namespace VRPersistence.DTO
 {
     public class SetNotifiedMessageDTO
     {

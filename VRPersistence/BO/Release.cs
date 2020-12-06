@@ -1,4 +1,4 @@
-﻿using VRPersistence.DTO.request;
+﻿using VRPersistence.DTO;
 
 namespace VRPersistence.BO
 {
@@ -12,7 +12,7 @@ namespace VRPersistence.BO
 
         public Release(AddReleaseDTO addReleaseDto)
         {
-            Media = new Media {MediaName = addReleaseDto.MediaName.ToLower()};
+            Media = new Media(addReleaseDto.MediaName);
             ReleaseNumber = addReleaseDto.ReleaseNumber;
             SubReleaseNumber = addReleaseDto.SubReleaseNumber;
             Url = addReleaseDto.Url;
@@ -21,7 +21,7 @@ namespace VRPersistence.BO
 
         public Release(DAO.Release release)
         {
-            Media = new Media {MediaName = release.Media.MediaName};
+            Media = new Media(release.Media.MediaName);
             ReleaseNumber = release.ReleaseNumber;
             SubReleaseNumber = release.SubReleaseNumber;
             Url = release.Url;

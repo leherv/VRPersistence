@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VRPersistence.DTO.request
+namespace VRPersistence.DTO
 {
     public class AddSubscriptionsDTO
     {

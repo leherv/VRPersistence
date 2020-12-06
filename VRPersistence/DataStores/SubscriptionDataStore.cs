@@ -24,11 +24,12 @@ namespace VRPersistence.DataStores
         {
             try
             {
-                if (!SubscriptionExists(subscription.Media.Id, subscription.NotificationEndpoint.Id))
+                if (!await SubscriptionExists(subscription.Media.Id, subscription.NotificationEndpoint.Id))
                 {
                     await _dbContext.Subscriptions.AddAsync(subscription);
                     await _dbContext.SaveChangesAsync();
                 }
+
                 return Result.Success();
             }
             catch (Exception e)
@@ -42,16 +43,40 @@ namespace VRPersistence.DataStores
             }
         }
 
-        private bool SubscriptionExists(long mediaId, long notificationEndpointId)
+        public async Task<Result> DeleteSubscription(Subscription subscription)
         {
-            return GetSubscription(mediaId, notificationEndpointId).IsSuccess;
+            try
+            {
+                _dbContext.Subscriptions.Remove(subscription);
+                await _dbContext.SaveChangesAsync();
+                return Result.Success();
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation(
+                    "Removing subscription for notificationEndpoint with identifier {identifier} for media {mediaName} failed due to: {exceptionMessage}. ",
+                    subscription.NotificationEndpoint.Identifier,
+                    subscription.Media.MediaName,
+                    e.Message);
+                return Result.Failure("Adding the subscription to the database failed.");
+            }
+                
         }
 
-        private Result<Subscription> GetSubscription(long mediaId, long notificationEndpointId)
+        private async Task<bool> SubscriptionExists(long mediaId, long notificationEndpointId)
         {
-            var subscription = _dbContext.Subscriptions.FirstOrDefault(s =>
-                s.MediaId == mediaId &&
-                s.NotificationEndpointId == notificationEndpointId);
+            return (await GetSubscription(mediaId, notificationEndpointId)).IsSuccess;
+        }
+
+        public async Task<Result<Subscription>> GetSubscription(long mediaId, long notificationEndpointId)
+        {
+            var subscription = await _dbContext.Subscriptions
+                .Include(s => s.Media)
+                .Include(s => s.NotificationEndpoint)
+                .FirstOrDefaultAsync(s =>
+                    s.MediaId == mediaId &&
+                    s.NotificationEndpointId == notificationEndpointId
+                );
             if (subscription == null)
             {
                 return Result.Failure<Subscription>(
@@ -61,15 +86,15 @@ namespace VRPersistence.DataStores
             return Result.Success(subscription);
         }
 
-        public async Task<Result<IEnumerable<NotificationEndpoint>>> GetSubscribedNotificationEndpoints(string mediaName)
+        public async Task<Result<List<NotificationEndpoint>>> GetSubscribedNotificationEndpoints(string mediaName)
         {
             try
             {
-                var notificationEndpoints = _dbContext.Subscriptions
+                var notificationEndpoints = await _dbContext.Subscriptions
                     .Where(s => s.Media.MediaName.ToLower().Equals(mediaName.ToLower()))
                     .Include(s => s.NotificationEndpoint)
-                    .AsEnumerable()
-                    .Select(s => s.NotificationEndpoint);
+                    .Select(s => s.NotificationEndpoint)
+                    .ToListAsync();
                 return Result.Success(notificationEndpoints);
             }
             catch (Exception e)
@@ -78,7 +103,29 @@ namespace VRPersistence.DataStores
                     "Fetching subscribed endpoints for media {mediaName} failed due to: {exceptionMessage}. ",
                     mediaName,
                     e.Message);
-                return Result.Failure<IEnumerable<NotificationEndpoint>>("Adding the subscription to the database failed.");
+                return Result.Failure<List<NotificationEndpoint>>(
+                    "Adding the subscription to the database failed.");
+            }
+        }
+
+        public async Task<Result<List<Media>>> GetSubscribedToMedia(string notificationEndpointIdentifier)
+        {
+            try
+            {
+                var media =  await _dbContext.Subscriptions
+                    .Where(s => s.NotificationEndpoint.Identifier == notificationEndpointIdentifier)
+                    .Select(s => s.Media)
+                    .ToListAsync();
+                return await Task.FromResult(media); Result.Success(media);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation(
+                    "Fetching media, which notificationEndpoint with identifier {identifier} is subscribed to, failed due to: {exceptionMessage}. ",
+                    notificationEndpointIdentifier,
+                    e.Message);
+                return Result.Failure<List<Media>>(
+                    $"Fetching media, which notificationEndpoint with identifier {notificationEndpointIdentifier} is subscribed to, failed due to: {e.Message}.");
             }
         }
     }

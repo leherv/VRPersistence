@@ -1,4 +1,4 @@
-﻿using VRPersistence.DTO.request;
+﻿using VRPersistence.DTO;
 
 namespace VRPersistence.BO
 {
@@ -9,7 +9,7 @@ namespace VRPersistence.BO
 
         public Subscription(AddSubscriptionDTO addSubscriptionDto, string endpointIdentifier)
         {
-            Media = new Media {MediaName = addSubscriptionDto.MediaName.ToLower()};
+            Media = new Media(addSubscriptionDto.MediaName);
             NotificationEndpoint = new NotificationEndpoint(endpointIdentifier);
         }
     }

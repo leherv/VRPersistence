@@ -1,5 +1,7 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using VRPersistence.DAO;
 
@@ -16,11 +18,12 @@ namespace VRPersistence.DataStores
             _dbContext = dbContext;
         }
         
-        public Result<Media> GetMedia(string mediaName)
+        public async Task<Result<Media>> GetMedia(string mediaName)
         {
-            var media = _dbContext.Media.Where(m => m.MediaName.ToLower().Equals(mediaName.ToLower()))
+            var media = await _dbContext.Media
+                .Where(m => m.MediaName.ToLower().Equals(mediaName.ToLower()))
                 .Take(1)
-                .ToList();
+                .ToListAsync();
             return media.Count == 1
                 ? Result.Success(media[0])
                 : Result.Failure<Media>($"There are {media.Count.ToString()} media with mediaName {mediaName}.");

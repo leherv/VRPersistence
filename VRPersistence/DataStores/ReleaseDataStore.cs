@@ -22,11 +22,11 @@ namespace VRPersistence.DataStores
 
         public async Task<Result<List<Release>>> GetNotNotified(string mediaName)
         {
-            var releases = _dbContext.Releases
+            var releases = await _dbContext.Releases
                 .Include(r => r.Media)
                 .Where(r => r.Media.MediaName.ToLower().Equals(mediaName.ToLower()) &&
                        !r.Notified)
-                .ToList();
+                .ToListAsync();
             return Result.Success(releases);
         }
         
@@ -61,15 +61,15 @@ namespace VRPersistence.DataStores
             }
         }
         
-        public Result<Release> GetNewestReleaseForMedia(string mediaName)
+        public async Task<Result<Release>> GetNewestReleaseForMedia(string mediaName)
         {
             try
             {
-                var newestRelease = _dbContext.Releases
+                var newestRelease = await _dbContext.Releases
                     .Where(r => r.Media.MediaName.ToLower().Equals(mediaName.ToLower()))
                     .OrderBy(r => r.ReleaseNumber)
                     .Take(1)
-                    .ToList();
+                    .ToListAsync();
                 return newestRelease.Count == 1
                     ? Result.Success(newestRelease[0])
                     : Result.Success<Release>(null);

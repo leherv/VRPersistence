@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VRPersistence.BO;
 using VRPersistence.Config;
-using VRPersistence.DTO.request;
+using VRPersistence.DTO;
 using VRPersistence.Extensions;
 using VRPersistence.Services;
 

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using VRPersistence.DAO;
 
@@ -22,7 +22,7 @@ namespace VRPersistence.DataStores
         {
             try
             {
-                if (!NotificationEndpointExists(notificationEndpoint.Identifier))
+                if (!await NotificationEndpointExists(notificationEndpoint.Identifier))
                 {
                     await _dbContext.AddAsync(notificationEndpoint);
                     await _dbContext.SaveChangesAsync();
@@ -39,17 +39,17 @@ namespace VRPersistence.DataStores
             }
         }
         
-        private bool NotificationEndpointExists(string identifier)
+        private async Task<bool> NotificationEndpointExists(string identifier)
         {
-            return GetNotificationEndpoint(identifier).IsSuccess;
+            return (await GetNotificationEndpoint(identifier)).IsSuccess;
         }
         
-        public Result<NotificationEndpoint> GetNotificationEndpoint(string identifier)
+        public async Task<Result<NotificationEndpoint>> GetNotificationEndpoint(string identifier)
         {
             try
             {
-                var endpoint = _dbContext.NotificationEndpoints
-                    .FirstOrDefault(n => n.Identifier.Equals(identifier));
+                var endpoint = await _dbContext.NotificationEndpoints
+                    .FirstOrDefaultAsync(n => n.Identifier.Equals(identifier));
                  if (endpoint == null)
                  {
                      return Result.Failure<NotificationEndpoint>(
