@@ -8,6 +8,8 @@ services:
       - ${VRPersistence_ApiPort}:5000
     environment:
       VRPersistence_ConnectionStrings__Db: "${VRPersistence_ConnectionStrings__Db}"
+    networks:
+      - vr
     depends_on:
       db:
         condition: service_healthy
@@ -25,6 +27,8 @@ services:
       POSTGRES_DB: "${VRPersistence_DbName}"
       POSTGRES_USER: "${VRPersistence_DbUsername}"
       POSTGRES_PASSWORD: "${VRPersistence_DbPassword}"
+    networks:
+      - vr
 
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${VRPersistence_DbUsername}" ]
@@ -35,3 +39,7 @@ services:
 volumes:
   test:
     name: "${VRPersistence_DbVolumeName}"
+    
+networks:
+  vr:
+    name: custom_vr

@@ -67,7 +67,7 @@ namespace VRPersistence.DataStores
             {
                 var newestRelease = await _dbContext.Releases
                     .Where(r => r.Media.MediaName.ToLower().Equals(mediaName.ToLower()))
-                    .OrderBy(r => r.ReleaseNumber)
+                    .OrderByDescending(r => r.ReleaseNumber)
                     .Take(1)
                     .ToListAsync();
                 return newestRelease.Count == 1
