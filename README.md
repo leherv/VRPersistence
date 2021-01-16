@@ -22,13 +22,19 @@ VR-Persistence exposes its API on localhost:${VRPersistenceApiPort}.
 Under /resources there is a Postman-Collection with example requests which can be used to test the service. Just dont forget to update the port in accordance with ${VRPersistenceApiPort}.
 
 # Database Data
+## docker-compose.yaml
 ${VRPersistence_DbVolumeName} in the .env file determines the name of the volume that is created and contains postgresql's data as we want to persist the database.
 I decided against a directory on the host system (outside the container) and mounting it in the container as directory permissions and security mechanismns need to be set up correctly.
 The problem of a host directory not being accessible on all potential hosts is partially true (only partially because the directory could also be configured via .env)
 Also if you use WSL2 you would have to have you codebase in WSL to make it work so the default is using a volume.
 
+## docker-compose-optionB.yaml
 You could reconfigure the app to use a bind-mount put an additonal variable in the environment and configure the app to bind postgresql's data. After that you would have to put your code in WSL2 or just run it on a Linux-Host.
 You can use docker-compose-optionB.yaml as a starting point, I also added the environment variable it uses in .env, you just need to uncomment it. Per default it is configured to use the pg_data folder.
+
+## docker-compose-optionC.yaml
+Suppose you want to use your own database server and not spin one up together with the api. In this case use docker-compose-optionC.yaml. It is essentially the same but without the database server.
+Do not forget to adjust the .env variables accordingly!
 
 ## 12 Factor App
 See: https://12factor.net/

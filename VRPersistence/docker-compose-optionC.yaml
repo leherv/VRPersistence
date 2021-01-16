@@ -1,0 +1,16 @@
+﻿version: '3.7'
+
+services:
+  api:
+    container_name: vrpersistence_api
+    build: .
+    ports:
+      - ${VRPersistence_ApiPort}:5000
+    environment:
+      VRPersistence_ConnectionStrings__Db: "${VRPersistence_ConnectionStrings__Db}"
+    networks:
+      - vr
+      
+networks:
+  vr:
+    name: custom_vr
