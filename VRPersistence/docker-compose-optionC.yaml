@@ -5,9 +5,9 @@ services:
     container_name: vrpersistence_api
     build: .
     ports:
-      - ${VRPersistence_ApiPort}:5000
+      - ${VRPERSISTENCE_APIPORT}:5000
     environment:
-      VRPersistence_ConnectionStrings__Db: "${VRPersistence_ConnectionStrings__Db}"
+      VRPERSISTENCE_CONNECTIONSTRINGS__DB: "${VRPERSISTENCE_CONNECTIONSTRINGS__DB}"
     networks:
       - vr
       

@@ -5,9 +5,9 @@ services:
     container_name: vrpersistence_api
     build: .
     ports:
-      - ${VRPersistence_ApiPort}:5000
+      - ${VRPERSISTENCE_APIPORT}:5000
     environment:
-      VRPersistence_ConnectionStrings__Db: "${VRPersistence_ConnectionStrings__Db}"
+      VRPERSISTENCE_CONNECTIONSTRINGS__DB: "${VRPERSISTENCE_CONNECTIONSTRINGS__DB}"
     networks:
       - vr
     depends_on:
@@ -18,27 +18,27 @@ services:
     container_name: vrpersistence_db
     image: library/postgres:13.0
     ports:
-      - ${VRPersistence_DbPort}:5432
+      - ${VRPERSISTENCE_DBPORT}:5432
     volumes:
       - type: volume
         source: test
         target: /var/lib/postgresql/data
     environment:
-      POSTGRES_DB: "${VRPersistence_DbName}"
-      POSTGRES_USER: "${VRPersistence_DbUsername}"
-      POSTGRES_PASSWORD: "${VRPersistence_DbPassword}"
+      POSTGRES_DB: "${VRPERSISTENCE_DBNAME}"
+      POSTGRES_USER: "${VRPERSISTENCE_DBUSERNAME}"
+      POSTGRES_PASSWORD: "${VRPERSISTENCE_DBPASSWORD}"
     networks:
       - vr
 
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${VRPersistence_DbUsername}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${VRPERSISTENCE_DBUSERNAME}" ]
       interval: 10s
       timeout: 5s
       retries: 5
       
 volumes:
   test:
-    name: "${VRPersistence_DbVolumeName}"
+    name: "${VRPERSISTENCE_DBVOLUMENAME}"
     
 networks:
   vr:
