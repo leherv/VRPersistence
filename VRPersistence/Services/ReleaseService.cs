@@ -51,7 +51,7 @@ namespace VRPersistence.Services
             var currentNewestResult = await _releaseDataStore.GetNewestReleaseForMedia(release.Media.MediaName);
             if (currentNewestResult.IsSuccess)
             {
-                _logger.LogInformation("Current newest release for media with name {mediaName} has releaseNumber {releaseNumber} and subReleaseNumber {subReleaseNumber}", currentNewestResult.Value?.Media, currentNewestResult.Value?.ReleaseNumber.ToString(), currentNewestResult.Value?.SubReleaseNumber.ToString());
+                _logger.LogInformation("Current newest release for media with name {mediaName} has releaseNumber {releaseNumber} and subReleaseNumber {subReleaseNumber}", currentNewestResult.Value?.Media.MediaName, currentNewestResult.Value?.ReleaseNumber.ToString(), currentNewestResult.Value?.SubReleaseNumber.ToString());
                 // no release yet for this media
                 if (currentNewestResult.Value == null) return true;
                 return release.IsNewerThan(currentNewestResult.Value);
