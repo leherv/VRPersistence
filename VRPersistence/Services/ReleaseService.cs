@@ -39,7 +39,7 @@ namespace VRPersistence.Services
                 {
                     releaseDao.Media = mediaResult.Value;
                 }
-                _logger.LogInformation("Release with releaseNumber {releaseNumber} is the newest for {mediaName} so it will be added" , release.ReleaseNumber.ToString(), release.Media.MediaName);
+                _logger.LogInformation("Release with releaseNumber {releaseNumber}.{subReleaseNumber} is the newest for {mediaName} so it will be added" , release.ReleaseNumber.ToString(), release.SubReleaseNumber.ToString(), release.Media.MediaName);
                 return await _releaseDataStore.AddRelease(releaseDao);
             }
             _logger.LogInformation("Release with releaseNumber {releaseNumber} is not newer for {mediaName} so it will be discarded", release.ReleaseNumber.ToString(), release.Media.MediaName);
@@ -51,6 +51,7 @@ namespace VRPersistence.Services
             var currentNewestResult = await _releaseDataStore.GetNewestReleaseForMedia(release.Media.MediaName);
             if (currentNewestResult.IsSuccess)
             {
+                _logger.LogInformation("Current newest release for media with name {mediaName} has releaseNumber {releaseNumber} and subReleaseNumber {subReleaseNumber}", currentNewestResult.Value?.Media, currentNewestResult.Value?.ReleaseNumber.ToString(), currentNewestResult.Value?.SubReleaseNumber.ToString());
                 // no release yet for this media
                 if (currentNewestResult.Value == null) return true;
                 return release.IsNewerThan(currentNewestResult.Value);
